@@ -1,0 +1,7 @@
+{
+  "exclude": [
+    "example"
+],
+  "extends": "@tsconfig/react-native/tsconfig.json",
+
+}
