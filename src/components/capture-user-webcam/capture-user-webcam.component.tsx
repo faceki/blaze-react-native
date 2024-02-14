@@ -1,4 +1,11 @@
-import {Text, View, Pressable, Image, Platform, ActivityIndicator} from 'react-native';
+import {
+  Text,
+  View,
+  Pressable,
+  Image,
+  Platform,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {styles} from './styles';
 
@@ -8,7 +15,7 @@ import FlipButton from '../../design-system/flip-button/flip-button.component';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
   Camera,
-  frameRateIncluded,
+  useCameraDevice,
   useCameraDevices,
   useFrameProcessor,
 } from 'react-native-vision-camera';
@@ -17,10 +24,14 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 type props = {
   webcamRef: React.MutableRefObject<any>;
-  handleSingleCapturePhoto: (step: number, image?: any,refOverride?:any) => void;
+  handleSingleCapturePhoto: (
+    step: number,
+    image?: any,
+    refOverride?: any,
+  ) => void;
   userStep: number;
   skipGuidanceScreens?: boolean;
-  livenessScoreOverride?:number
+  livenessScoreOverride?: number;
   goBackUserSteps: (index?: number) => void;
   findOutStepContent: () => {
     step: number;
@@ -52,33 +63,22 @@ const CaptureUserWebcam = ({
   goBackUserSteps,
   findOutStepContent,
   skipGuidanceScreens,
-  livenessScoreOverride
+  livenessScoreOverride,
 }: props) => {
   const devices: any = useCameraDevices();
-  const [device, setDevice] = useState(devices.back);
+  const device = useCameraDevice('back', {
+    physicalDevices: [
+      'ultra-wide-angle-camera',
+      'wide-angle-camera',
+      'telephoto-camera',
+    ],
+  });
   const [loading, setLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState(null);
-
   const tets = useRef<any | null>(null);
   var form: FormData | undefined;
-  useEffect(() => {
-    if (devices) {
-      setDevice(devices.back);
-   
-    }
-  }, [devices]);
-  const flipCamera = () => {
-    if (device == devices.front) {
-      setDevice(devices.back);
-    } else {
-      setDevice(devices.front);
-    }
-  };
-
 
   useEffect(() => {
     async function name() {
-  
       try {
         var te = await tets?.current?.takePhoto?.({
           enableShutterSound: false,
@@ -88,7 +88,7 @@ const CaptureUserWebcam = ({
 
         if (!te) {
           // console.log('Photo capture failed');
-      
+
           return;
         }
         if (!te.path) {
@@ -98,14 +98,14 @@ const CaptureUserWebcam = ({
 
         form = new FormData();
         form.append('image', {
-          uri: Platform.OS == "android" ? 'file://' + te?.path:  te?.path,
+          uri: Platform.OS == 'android' ? 'file://' + te?.path : te?.path,
           type: 'image/jpeg',
           name: `photo_id_back_image.jpg`,
         });
 
         console.log(te?.path);
       } catch (error) {
-        setTimeout(name, Platform.OS  == "android" ? 100 : 1500); // Retry after 700ms
+        setTimeout(name, Platform.OS == 'android' ? 100 : 1500); // Retry after 700ms
       }
 
       try {
@@ -120,14 +120,14 @@ const CaptureUserWebcam = ({
         console.log(response?.data);
 
         if (objectsDetected < 1) {
-          setTimeout(name, Platform.OS  == "android" ? 100 : 1500); // Retry after 700ms
+          setTimeout(name, Platform.OS == 'android' ? 100 : 1500); // Retry after 700ms
         } else {
           handleSingleCapturePhoto(userStep, te);
         }
       } catch (error: any) {
         console.error('API request failed:', JSON.stringify(error));
         // Handle the error or retry if needed
-        setTimeout(name, Platform.OS  == "android" ? 100 : 1500); // Retry after 700ms
+        setTimeout(name, Platform.OS == 'android' ? 100 : 1500); // Retry after 700ms
       }
     }
     // setTimeout(() => {
@@ -135,7 +135,7 @@ const CaptureUserWebcam = ({
     // }, 3000);
   }, []);
 
-  const HandleCapture = async() =>{
+  const HandleCapture = async () => {
     // {userStep === 7 ? 'BACK SIDE' : 'FRONT SIDE'}
     var te = await tets?.current?.takePhoto?.({
       enableShutterSound: false,
@@ -145,12 +145,10 @@ const CaptureUserWebcam = ({
 
     form = new FormData();
     form.append('image', {
-      uri: Platform.OS == "android" ? 'file://' + te?.path:  te?.path,
+      uri: Platform.OS == 'android' ? 'file://' + te?.path : te?.path,
       type: 'image/jpeg',
       name: `photo_id_back_image.jpg`,
     });
-
-    console.log("here",te)
 
     const response = await axios.post(
       'https://addon.faceki.com/advance/detect',
@@ -160,25 +158,23 @@ const CaptureUserWebcam = ({
       },
     );
 
-    console.log("here",response)
+    console.log('Detection Response', response);
 
-
-    if(response.data?.liveness?.livenessScore && response.data?.liveness?.livenessScore > (livenessScoreOverride || 0.7))
-    {
+    if (
+      response.data?.liveness?.livenessScore &&
+      response.data?.liveness?.livenessScore > (livenessScoreOverride || 0.7)
+    ) {
       setLoading(false);
       handleSingleCapturePhoto(userStep, te);
-
-    }else{
+    } else {
       setLoading(false);
       Toast.show({
         type: 'error',
         text1: 'Please Try Again!',
-        text2: 'Captured image unable to pass quality check!'
+        text2: 'Captured image unable to pass quality check!',
       });
     }
-
-
-  }
+  };
 
   return (
     <View key="main" style={{flex: 1}}>
@@ -192,8 +188,6 @@ const CaptureUserWebcam = ({
           ref={tets}
           photo={true}
           video={true}
-          //   frameProcessor={frameProcessor}
-          // frameProcessorFps={"auto"}
         />
       )}
 
@@ -210,13 +204,12 @@ const CaptureUserWebcam = ({
           style={styles.overlayImage}
           resizeMode="cover"
         />
-        
       </View>
       <Spinner
-          visible={loading}
-          textContent={'Analyzing...'}
-          textStyle={{color:"white"}}
-        />
+        visible={loading}
+        textContent={'Analyzing...'}
+        textStyle={{color: 'white'}}
+      />
       {/* Header Component */}
 
       <View key="topContent" style={styles.topContent}>
@@ -280,19 +273,16 @@ const CaptureUserWebcam = ({
         key="bottomContent"
         style={[styles.captureButtonContainer, {zIndex: 9999}]}>
         <View style={styles.buttonRow}>
-          <View key={'flip'} style={styles.flipButtonWrapper}>
-            <FlipButton onClick={flipCamera} />
-          </View>
           <View key={'capture'} style={styles.captureButtonWrapper}>
-            <CaptureButton onClick={() =>{    setLoading(true); HandleCapture() }
-              // handleSingleCapturePhoto(userStep,null,tets)
-              
-              } />
+            <CaptureButton
+              onClick={() => {
+                setLoading(true);
+                HandleCapture();
+              }}
+            />
           </View>
         </View>
       </View>
-
-
     </View>
   );
 };

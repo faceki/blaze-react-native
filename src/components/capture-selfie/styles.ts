@@ -88,7 +88,8 @@ export const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   right: {
-    width: width / 5,
+    width: width / 4,
+    opacity:0
   },
   selfieHeading: {
     color: getBranding().colors.textDefault,

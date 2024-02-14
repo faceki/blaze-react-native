@@ -107,7 +107,8 @@ export const styles = StyleSheet.create({
   },
 
   flipButtonWrapper: {
-    marginRight: 10, // Adjust the margin to control the gap to the right of the "Flip" button
+    marginRight: 0, // Adjust the margin to control the gap to the right of the "Flip" button
+    opacity:0
   },
 
   captureButtonWrapper: {

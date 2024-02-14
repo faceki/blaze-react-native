@@ -7,19 +7,13 @@ import React, {
 } from 'react';
 import {
   getAccessTokenFacekiAPI,
-  getKYCRulesAPI,
   getWorkFlowRulesAPI,
-  postMultiKYCVerificationAPI,
-  postSingleKYCVerificationAPI,
   submitKYCRequest,
 } from '../service/facekiAPI';
 import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
 import {HEADINGS, HEADING_TYPE} from '../wrapper/HEADINGS';
 import type {PropsWithChildren} from 'react';
-import ml from '@react-native-firebase/ml';
-import {
-  FacekiApiResponse,
-} from '../service/types/facekiresponse';
+import {FacekiApiResponse} from '../service/types/facekiresponse';
 import {Camera} from 'react-native-vision-camera';
 import {Branding} from '../service/types/interfaces';
 
@@ -94,12 +88,8 @@ type ContextType = {
 type VerificationProviderProps = PropsWithChildren<{
   clientId: string;
   clientSecret: string;
-  onError: (
-    message: Error,
-  ) => void;
-  onComplete: (
-    message: FacekiApiResponse,
-  ) => void;
+  onError: (message: Error) => void;
+  onComplete: (message: FacekiApiResponse) => void;
   skipGuidanceScreens?: boolean;
   consenttermofuseLink?: string;
   allowSingleOverride?: boolean;
@@ -232,11 +222,11 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({
 
   const checkCameraPermission = async () => {
     const cameraPermission = await Camera.getCameraPermissionStatus();
-    if (cameraPermission != 'authorized') {
+    if (cameraPermission != 'granted') {
       const newCameraPermission = await Camera.requestCameraPermission();
       if (newCameraPermission === 'denied') await Linking.openSettings();
     }
-    return cameraPermission == 'authorized';
+    return cameraPermission == 'granted';
   };
 
   useEffect(() => {
@@ -302,31 +292,7 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({
             setUserStep(3);
           }
         }
-
-        // if (
-        //   (data.allowSingle || allowSingleOverride) &&
-        //   singleVerificationDoc
-        // ) {
-        //   setAllowedKycDocuments([singleVerificationDoc]);
-        //   setSelectedOption(singleVerificationDoc);
-        // }
-        // if ((data.allowSingle || allowSingleOverride) && skipFirstScreen) {
-        //   setUserStep(2);
-        // } else if (skipFirstScreen) {
-        //   setUserStep(3);
-        // }
-        // If Not Overwrite
-        // if (!singleVerificationDoc) {
-        //   setSelectedOption(data.allowedKycDocuments?.[0]);
-        // }
-
-        // if (allowSingleOverride) {
-        //   setAllowSingle(allowSingleOverride);
-        // } else {
-        //   setAllowSingle(data.allowSingle);
-        // }
         setLoading(false);
-
         const copyLeftOptions = [...resultValues.documents];
         copyLeftOptions.shift(); // remove first element from an array
         setLeftOptions(copyLeftOptions);
@@ -459,21 +425,22 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({
               .then(res => {
                 console.log(res);
 
-                const responseWithType = FacekiApiResponse.createInstance(res.status, res.code, res.message, res.appVersion, res.result);
+                const responseWithType = FacekiApiResponse.createInstance(
+                  res.status,
+                  res.code,
+                  res.message,
+                  res.appVersion,
+                  res.result,
+                );
 
-  
                 onComplete && onComplete(responseWithType);
-
-
 
                 handleError(res);
               })
               .catch(err => {
                 console.log(err);
 
-  
                 onError && onError(err);
-
               });
           }
         } else {
@@ -513,9 +480,15 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({
           submitKYCRequest(formData)
             .then(res => {
               console.log(res);
-              const responseWithType = FacekiApiResponse.createInstance(res.status, res.code, res.message, res.appVersion, res.result);
+              const responseWithType = FacekiApiResponse.createInstance(
+                res.status,
+                res.code,
+                res.message,
+                res.appVersion,
+                res.result,
+              );
               onComplete && onComplete(responseWithType);
-              
+
               handleError(res);
             })
             .catch(err => {

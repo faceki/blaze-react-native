@@ -90,6 +90,7 @@ config = use_native_modules!
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 end
 ```
+ For More Information & Detailed Guide About Icons: https://www.npmjs.com/package/react-native-vector-icons
 
 RUN
 
@@ -220,3 +221,12 @@ rm -rf node_modules && rm -rf yarn.lock && watchman watch-del-all && cd ios && r
 npm i
 cd ios && pod install
 ```
+
+
+## Change Log
+
+* 2024-02-14 -- 1.0.1
+  * Upgraded React Vision Camera V2 to V3
+
+* 2024-1-24 -- 1.0.0
+  * Initial Release for FACEKI BLAZE 3.0

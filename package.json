@@ -1,7 +1,7 @@
 {
   "name": "@faceki/blaze-react-native",
   "description": "Faceki eKYC Blaze 3.0",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "source": "App",
   "main": "App.tsx",
@@ -41,7 +41,7 @@
     "react-native-safe-area-context": "^4.6.3",
     "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": ">= ^9.2.0",
-    "react-native-vision-camera": "2.16.1"
+    "react-native-vision-camera": "^3.8.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
