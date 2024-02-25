@@ -2,7 +2,7 @@ import {Image, Text, View} from 'react-native';
 import React from 'react';
 import {styles} from './styles';
 import {getBranding} from '../../branding';
-const LOGO = '../../assets/ex-id-card.png';
+const LOGO = '../../assets/GuidanceGif.gif';
 
 const PassportPhotoGuide = () => {
   return (

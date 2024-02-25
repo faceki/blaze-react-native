@@ -543,7 +543,8 @@ PODS:
     - RNFBApp
   - RNGestureHandler (2.12.0):
     - React-Core
-  - RNVectorIcons (9.2.0):
+  - RNVectorIcons (10.0.3):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - SocketRocket (0.6.1)
   - VisionCamera (3.8.2):
@@ -811,7 +812,7 @@ SPEC CHECKSUMS:
   RNFBApp: 0b534885354024f4d171ede8da04521d81bc1767
   RNFBML: 005bd7ebfadcf75da740cd8960031e89a5587133
   RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
-  RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
+  RNVectorIcons: 64e6a523ac30a3241efa9baf1ffbcc5e76ff747a
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   VisionCamera: 4b98b273902ac18491bb68481b6601f1f0da0f2d
   Yoga: c79810ea24a2a73b7f39174e78d60f4e28261f33

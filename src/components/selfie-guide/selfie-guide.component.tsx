@@ -6,7 +6,7 @@ import {globalStyles} from '../../../globalStyles';
 // import branding from '../../branding';
 import { getBranding } from '../../branding';
 
-const selfieGuide = '../../assets/selfieGuide.png';
+const selfieGuide = '../../assets/SelfieGif.gif';
 
 const SelfieGuide = () => {
   return (

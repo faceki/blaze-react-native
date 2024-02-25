@@ -44,6 +44,21 @@ Add the following usage descriptions to your Info.plist (usually found at: ios/P
 <key>NSCameraUsageDescription</key>
 <string>$(PRODUCT_NAME) needs access to your Camera.</string>
 ```
+ 
+ ## Add Support for Gif in Android
+
+Add to your dependencies in android/app/build.gradle
+
+ ```gradle
+dependencies {
+  // For animated GIF support
+  implementation ("com.facebook.fresco:animated-gif:2.5.0")
+}
+
+```
+
+More information: https://reactnative.dev/docs/image?syntax=functional#gif-and-webp-support-on-android
+
 
 ## Troubleshoot for react-native-vector-icons
 
@@ -224,6 +239,12 @@ cd ios && pod install
 
 
 ## Change Log
+
+* 2024-02-25 -- 1.0.3
+  * Update Guidance Gifs
+
+* 2024-02-25 -- 1.0.2
+  * Update Vector Icon to Latest
 
 * 2024-02-14 -- 1.0.1
   * Upgraded React Vision Camera V2 to V3
