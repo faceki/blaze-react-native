@@ -1,7 +1,7 @@
 {
   "name": "@faceki/blaze-react-native",
   "description": "Faceki eKYC Blaze 3.0",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": false,
   "source": "App",
   "main": "App.tsx",
@@ -26,6 +26,7 @@
     "clean": "cd ios && rm -rf Pods && rm -rf Podfile.lock && pod deintegrate && pod cache clean --all && cd .."
   },
   "dependencies": {
+    "@bam.tech/react-native-image-resizer": "^3.0.7",
     "@react-native-firebase/app": "^18.3.2",
     "@react-native-firebase/ml": "^18.3.2",
     "@react-native-masked-view/masked-view": "^0.2.9",

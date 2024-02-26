@@ -15,12 +15,21 @@ import FlipButton from '../../design-system/flip-button/flip-button.component';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
   Camera,
+  CameraDeviceFormat,
   useCameraDevice,
   useCameraDevices,
   useFrameProcessor,
 } from 'react-native-vision-camera';
 import {getBranding} from '../../branding';
 import Spinner from 'react-native-loading-spinner-overlay';
+import overlayImage from '../../assets/faceki-overlay-camera.png';
+import branding from '../../branding';
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
+
+const Resizer = require("@bam.tech/react-native-image-resizer")
+
 
 type props = {
   webcamRef: React.MutableRefObject<any>;
@@ -51,10 +60,7 @@ type props = {
  * @param {number} props.userStep - The current step in the user verification process.
  * @returns {JSX.Element} - The rendered component as a JSX element.
  */
-import overlayImage from '../../assets/faceki-overlay-camera.png';
-import branding from '../../branding';
-import axios from 'axios';
-import Toast from 'react-native-toast-message';
+
 
 const CaptureUserWebcam = ({
   webcamRef,
@@ -142,6 +148,53 @@ const CaptureUserWebcam = ({
       // enableAutoStabilization: true,
       qualityPrioritization: 'speed',
     });
+
+    try {
+      let result = await Resizer.default.createResizedImage(
+        (Platform.OS === 'android' ? 'file://' : '') + te.path,
+        1920,
+        1080,
+        'JPEG',
+        100,
+        0,
+        undefined,
+        false,
+        {
+          mode: "contain",
+          onlyScaleDown:true,
+        }
+      );
+        console.log(result)
+        te = result
+      // setResizedImage(result);
+    } catch (error) {
+      console.log(error)
+      // Alert.alert('Unable to resize the photo');
+    }
+  
+
+    // var data =  await  ImageResizer.createResizedImage(
+    //   Platform.OS == 'android' ? 'file://' + te?.path : te?.path,
+    //   1920,
+    //   1080,
+    //   'JPEG',
+    //     100,
+    //     0,
+    //     undefined,
+    //     false,
+    //     {
+    //       mode: "contain",
+    //       onlyScaleDown:true,
+    //     }
+    // )
+    //   .then((response) => {
+    //     // response.uri is the URI of the new image that can now be displayed, uploaded...
+    //     // response.path is the path of the new image
+    //     // response.name is the name of the new image with the extension
+    //     // response.size is the size of the new image
+    //     return response;
+    //   })
+     
 
     form = new FormData();
     form.append('image', {

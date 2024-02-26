@@ -16,6 +16,7 @@ import type {PropsWithChildren} from 'react';
 import {FacekiApiResponse} from '../service/types/facekiresponse';
 import {Camera} from 'react-native-vision-camera';
 import {Branding} from '../service/types/interfaces';
+const Resizer = require("@bam.tech/react-native-image-resizer")
 
 type userStepsType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
 export type modeType = 'user' | {exact: 'environment'};
@@ -356,6 +357,35 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({
       }
 
       if (step === 10) {
+
+
+        //Compressing
+        try {
+          let result = await Resizer.default.createResizedImage(
+            (Platform.OS === 'android' ? 'file://' : '') + imageSrc.path,
+            1920,
+            1080,
+            'JPEG',
+            100,
+            0,
+            undefined,
+            false,
+            {
+              mode: "contain",
+              onlyScaleDown:true,
+            }
+          );
+            console.log(result)
+            imageSrc = result
+          // setResizedImage(result);
+        } catch (error) {
+          console.log(error)
+          // Alert.alert('Unable to resize the photo');
+        }
+      
+
+
+
         setImgUrls(prev => ({
           ...prev,
           [selectedOption]: {
@@ -363,6 +393,9 @@ export const VerificationProvider: React.FC<VerificationProviderProps> = ({
             selfie: imageSrc,
           },
         }));
+
+
+
 
         setUserStep(prev => (prev + 1) as userStepsType);
         console.log(imgUrls);

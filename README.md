@@ -24,7 +24,10 @@ Please make sure to keep your client ID and secret secure, as they are used to a
 npm i @faceki/blaze-react-native
 npm i react-native-vision-camera
 npm i lottie-react-native
+npm i @bam.tech/react-native-image-resizer@3.0.7
 ```
+
+This SDK is tested with @bam.tech/react-native-image-resizer version 3.0.7, you can use latest if doesn't work. Kindly use version 3.0.7
 
 ## Permissions
 
@@ -239,6 +242,9 @@ cd ios && pod install
 
 
 ## Change Log
+
+* 2024-02-26 -- 1.0.4
+  * Update For Issue 413, Resize/Compress Image Added
 
 * 2024-02-25 -- 1.0.3
   * Update Guidance Gifs
